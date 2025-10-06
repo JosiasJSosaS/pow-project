@@ -1,0 +1,6 @@
+@pow_project.Server_HostAddress = http://localhost:5249
+
+GET {{pow_project.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
