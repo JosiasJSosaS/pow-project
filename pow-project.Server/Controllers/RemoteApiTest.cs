@@ -31,7 +31,7 @@ namespace pow_project.Server.Controllers
 
                     var Movies = JsonSerializer.Deserialize<ResultPage>(json);
 
-                    return Ok(json);
+                    return Ok(Movies);
                 }
                 else
                 {

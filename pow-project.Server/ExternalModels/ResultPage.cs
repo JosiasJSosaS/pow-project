@@ -2,9 +2,9 @@
 {
     public class ResultPage
     {
-        int page { get; set; }
-        List<Movie>? results { get; set; }
-        int total_pages { get; set; }
-        int total_results { get; set; }
+        public int page { get; set; }
+        public List<Movie>? results { get; set; }
+        public int total_pages { get; set; }
+        public int total_results { get; set; }
     }
 }
