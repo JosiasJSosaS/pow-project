@@ -1,33 +1,39 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
-namespace pow_project.Server.Controllers
+var builder = WebApplication.CreateBuilder(args);
+
+// Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(o =>
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
-    {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+    o.SwaggerDoc("v1", new() { Title = "pow-project API", Version = "v1" });
 
-        private readonly ILogger<WeatherForecastController> _logger;
+    var xml = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xml);
+    if (File.Exists(xmlPath))
+        o.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+});
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
-        }
+builder.Services.AddControllers();
 
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
-        {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
-    }
-}
+var app = builder.Build();
+
+app.UseDefaultFiles();
+app.MapStaticAssets();
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+
+// 👇 Swagger UI (dejalo ANTES del fallback)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "pow-project API v1");
+    // Si querés verlo en la raíz:
+    // c.RoutePrefix = string.Empty;
+});
+
+app.MapControllers();
+app.MapFallbackToFile("/index.html");
+
+app.Run();
