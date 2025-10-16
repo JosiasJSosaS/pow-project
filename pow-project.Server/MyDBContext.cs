@@ -1,31 +1,30 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using pow_project.Server.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace pow_project.Server
 {
     public class MyDBContext : IdentityDbContext<User>
     {
-        public MyDBContext(DbContextOptions<MyDBContext> options) : base(options)
-        {
-        }
+        public MyDBContext(DbContextOptions<MyDBContext> options) : base(options) {}
+
+        // Fallback por si no se configuró por DI en Program.cs
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql("User Id=root;Host=localhost;Database=movies;");
-        }   
+            if (!optionsBuilder.IsConfigured)
+            {
+                // ¡Usá un connection string completo!
+                // OJO: completá la contraseña real si aplica.
+                var cs = "Server=localhost;Database=movies;User Id=root;Password=;";
+                optionsBuilder.UseMySql(cs, ServerVersion.AutoDetect(cs));
+            }
+        }
 
-        public DbSet<Models.Movie> Movies { get; set; }
-        public DbSet<Models.Genre> Genres { get; set; }
-        public DbSet<Models.MovieList> MovieLists { get; set; }
-        public DbSet<Models.Comment> Comments { get; set; }
+        public DbSet<Movie> Movies { get; set; } = default!;
+        public DbSet<Genre> Genres { get; set; } = default!;
+        public DbSet<MovieList> MovieLists { get; set; } = default!;
+        public DbSet<Comment> Comments { get; set; } = default!;
     }
 }

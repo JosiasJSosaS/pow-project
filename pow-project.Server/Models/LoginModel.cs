@@ -1,8 +1,13 @@
-﻿namespace pow_project.Server.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace pow_project.Server.Models
 {
     public class LoginModel
     {
-        public string email { get; internal set; }
-        public string password { get; internal set; }
+        [Required, EmailAddress]
+        public required string email { get; set; } = default!;
+
+        [Required]
+        public required string password { get; set; } = default!;
     }
 }
