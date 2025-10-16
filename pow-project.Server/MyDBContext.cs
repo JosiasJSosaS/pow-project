@@ -10,13 +10,10 @@ namespace pow_project.Server
     {
         public MyDBContext(DbContextOptions<MyDBContext> options) : base(options) {}
 
-        // Fallback por si no se configuró por DI en Program.cs
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // ¡Usá un connection string completo!
-                // OJO: completá la contraseña real si aplica.
                 var cs = "Server=localhost;Database=movies;User Id=root;Password=;";
                 optionsBuilder.UseMySql(cs, ServerVersion.AutoDetect(cs));
             }
