@@ -1,16 +1,37 @@
-﻿namespace pow_project.Server.ExternalModels
+﻿using System.Text.Json.Serialization;
+
+namespace pow_project.Server.ExternalModels
 {
     public class Movie
     {
-        public int id { get; set; }
-        public bool adult { get; set; }
-        public List<int>? genre_ids { get; set; }
-        public string title { get; set; }
-        public string original_language { get; set; }
-        public string original_title { get; set; }
-        public string overview { get; set; }
-        public double popularity { get; set; }
-        public string poster_path { get; set; }
-        public string release_date { get; set; }
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("adult")]
+        public bool Adult { get; set; }
+
+        [JsonPropertyName("genre_ids")]
+        public List<int>? GenreIds { get; set; }
+
+        [JsonPropertyName("title")]
+        public string? Title { get; set; }
+
+        [JsonPropertyName("original_language")]
+        public string? OriginalLanguage { get; set; }
+
+        [JsonPropertyName("original_title")]
+        public string? OriginalTitle { get; set; }
+
+        [JsonPropertyName("overview")]
+        public string? Overview { get; set; }
+
+        [JsonPropertyName("popularity")]
+        public double Popularity { get; set; }
+
+        [JsonPropertyName("poster_path")]
+        public string? PosterPath { get; set; }
+
+        [JsonPropertyName("release_date")]
+        public string? ReleaseDate { get; set; }
     }
 }
