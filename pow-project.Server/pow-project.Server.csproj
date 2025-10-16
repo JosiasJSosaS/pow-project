@@ -12,9 +12,6 @@
 
   <ItemGroup>
     <!-- OpenAPI nativo (podés tenerlo instalado aunque no lo uses) -->
-    <PackageReference Include="Devart.Data" Version="6.0.290" />
-    <PackageReference Include="Devart.Data.MySql" Version="9.4.290" />
-    <PackageReference Include="Devart.Data.MySql.EFCore" Version="9.4.290.9" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
@@ -28,6 +25,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
 
     <!-- Swagger UI (Swashbuckle) -->
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
