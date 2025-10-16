@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using pow_project.Server.Models;
 using System.Text;
-// 👇 Importante para ServerVersion (Pomelo)
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace pow_project.Server
@@ -18,19 +17,19 @@ namespace pow_project.Server
             builder.Services.AddControllers();
             builder.Services.AddOpenApi();
 
-            // ---- DB: MySQL con Pomelo + ServerVersion.AutoDetect ----
             var cs = builder.Configuration.GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' no está configurada.");
 
             builder.Services.AddDbContext<MyDBContext>(options =>
                 options.UseMySql(cs, ServerVersion.AutoDetect(cs)));
 
-            // ---- Identity ----
             builder.Services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<MyDBContext>()
                 .AddDefaultTokenProviders();
 
-            // ---- Auth JWT ----
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             var jwtSecret = builder.Configuration["Jwt:Secret"]
                 ?? throw new InvalidOperationException("Jwt:Secret no está configurado en appsettings.");
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
@@ -64,18 +63,20 @@ namespace pow_project.Server
 
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                app.MapOpenApi().AllowAnonymous();
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "pow-project v1");
+                    c.RoutePrefix = "swagger";
+                });
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapControllers();
-
             app.MapFallbackToFile("/index.html");
-
             app.Run();
         }
     }
