@@ -14,7 +14,11 @@ namespace pow_project.Server
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddJsonOptions(o =>
+            {
+                o.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+            });
+
             builder.Services.AddOpenApi();
 
             var cs = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -29,6 +33,22 @@ namespace pow_project.Server
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddCors(opt =>
+            {
+                opt.AddPolicy("DevCors", p => p
+                    .WithOrigins(
+                        "http://localhost:5249",
+                        "https://localhost:5249",
+                        "http://localhost:5000",
+                        "https://localhost:5001",
+                        "http://localhost:3000",
+                        "http://localhost:5173"
+                    )
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials());
+            });
 
             var jwtSecret = builder.Configuration["Jwt:Secret"]
                 ?? throw new InvalidOperationException("Jwt:Secret no está configurado en appsettings.");
@@ -73,10 +93,16 @@ namespace pow_project.Server
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("DevCors");
+
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.MapControllers();
+
             app.MapFallbackToFile("/index.html");
+
             app.Run();
         }
     }
