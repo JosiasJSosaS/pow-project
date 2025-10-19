@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using pow_project.Server.Models;
 
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-
 namespace pow_project.Server
 {
     public class MyDBContext : IdentityDbContext<User>
